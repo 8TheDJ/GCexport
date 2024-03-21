@@ -1,3 +1,5 @@
+#Copyright 8TheDJ
+#Application for grade calculator.
 import customtkinter as ctk
 import os 
 import pandas as pd
@@ -39,34 +41,27 @@ def createfile():
     if os.path.exists(excel_bestand):
         os.remove(excel_bestand)
 
-    # Lijst met aantal behaalde punten van 100 naar 0 met stapgrootte van -0.5
     aantal_behaalde_punten_lijst = list(range(maxaantalinput * 2, 0, -1)) # Verdubbel het maxaantalinput zodat de stapgrootte van 0.5 wordt bereikt
     aantal_behaalde_punten_lijst = [punt / 2 for punt in aantal_behaalde_punten_lijst] # Converteer de punten terug naar floats
 
-    # Het totaal aantal punten blijft hetzelfde
     totaal_aantal_punten_lijst = [maxaantalinput] * len(aantal_behaalde_punten_lijst)
 
-    # Lijsten om cijfers op te slaan
     cijfers = []
 
-    # Bereken cijfers voor elk paar aantal behaalde punten en totaal aantal punten
     for aantal_behaalde_punten, totaal_aantal_punten in zip(aantal_behaalde_punten_lijst, totaal_aantal_punten_lijst):
         cijfer = bereken_cijfer(aantal_behaalde_punten, totaal_aantal_punten, norminput)
         if cijfer < 1:
             cijfer = 1
         cijfers.append(cijfer)
 
-    # Creëer een dataframe met de gegevens
     data = {'Aantal behaalde punten': aantal_behaalde_punten_lijst,
             'Totaal aantal punten': totaal_aantal_punten_lijst,
             'Cijfer': cijfers}
     df = pd.DataFrame(data)
 
-    # Bepaal het pad naar het Excel-bestand in dezelfde map als het script
     script_dir = os.path.dirname(__file__)
     excel_bestand = os.path.join(script_dir, "cijfers.xlsx")
 
-    # Exporteer het dataframe naar Excel
     df.to_excel(excel_bestand, index=False)
 
     print("Cijfers zijn geëxporteerd naar", excel_bestand)# conformatie, dat alles goed geëxporteerd is
